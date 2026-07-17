@@ -1,22 +1,42 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    # recursive function to check whether the text matches the pattern
-    def isMatch(self, text: str, pattern: str) -> bool:
-        # base case: if the pattern is empty the text must also be empty for sucessful match
-        if len(pattern) == 0:
-            return len(text) == 0
-        # check whether the first characters of the text matches the first characters of the pattern a "." in the pattern matches any single characters
-        first_char_matched = (len(text) > 0 and (pattern[0] == text[0] or pattern[0] == "."))
-        # if the second characters of the pattern "*" it means zero or more occurences of the precedding characters
-        if len(pattern) >= 2 and pattern[1] == "*":
-            return(
-                # option 1: ignore the "x*" completely and move to the remaining pattern
-                self.isMatch(text, pattern[2:]) or
-                # option 2: if the first characters matches, consume one character from the text and contain using the same pattern becase "*" can match multiple characters
-                (first_char_matched and self.isMatch(text[1:], pattern))
+    # recursive function with memoization
+    def solve(self, i: int, j: int, text: str, pattern: str) -> bool:
+        # base case: if the pattern has been completely processed the text must also be completely processed for a successful match.
+        if j == len(pattern):
+            return i == len(text)
+        # if this state has already been solved return the stored result.
+        if self.dp[i][j] != -1:
+            return bool(self.dp[i][j])
+        # check whether the current characters match.
+        # match occurs if:
+        # 1. The text still has characters remaining.
+        # 2. The pattern character equals the text character or the pattern contains '.' which matches any character.
+        first_match = (i < len(text) and(pattern[j] == text[i] or pattern[j] == '.'))
+        # if the next character in the pattern is '*' there are two possible choices:
+        if j + 1 < len(pattern) and pattern[j + 1] == '*':
+            ans = (
+                # option 1: ignore the current character and '*' treat it as appearing zero times
+                self.solve(i, j + 2, text, pattern) or
+                # option 2: if the current characters match consume one character from the text while keeping the same pattern because '*' can represent multiple occurrences.
+                (first_match and self.solve(i + 1, j, text, pattern))
             )
-        # if there is no "*" the first characters must watch then recursively match the remaining part of both the text and the pattern
-        return (first_char_matched and self.isMatch(text[1:], pattern[1:]))
+        else:
+            # normal character match: both the current text and pattern characters must match, then continue with the next characters.
+            ans = (first_match and self.solve(i + 1, j + 1, text, pattern))
+        # store the computed result in the memoization table to avoid solving the same state again.
+        self.dp[i][j] = 1 if ans else 0
+        # return whether the remaining text matches the remaining pattern.
+        return ans
+    # main function
+    def isMatch(self, text: str, pattern: str) -> bool:
+        # create the memoization table. dp[i][j] stores whether text[i:] matches pattern[j:].
+        # -1 = not computed
+        #  0 = False
+        #  1 = True
+        self.dp = [[-1] * 21 for _ in range(21)]
+        # start matching from the beginning of both the text and the pattern.
+        return self.solve(0, 0, text, pattern)
 
-# Time Complexity : O(N)
+# Time Complexity : O(N!)
 # Space Complexity : O(N)
