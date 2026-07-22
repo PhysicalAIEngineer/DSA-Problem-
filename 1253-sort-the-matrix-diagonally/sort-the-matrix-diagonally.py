@@ -1,40 +1,32 @@
-# Brute Force Code 
+# Optimal Code
 class Solution:
     # sort every diagonal of the matrix in ascending order
-    def diagonalSort(self, mat: List[List[int]]) -> List[List[int]]:
+    def diagonalSort(self, mat: list[list[int]]) -> list[list[int]]:
         # number of rows and columns
-        rows = len(mat)
-        cols = len(mat[0])
-        # function to sort a single diagonal starting from (start_row, start_col)
-        def sortdiagonal(start_row, start_col):
-            # store all element of the current diagonal
-            diagonal = []
-            row = start_row
-            col = start_col
-            # collect the diagonal element
-            while row < rows and col < cols:
-                diagonal.append(mat[row][col])
-                row += 1
-                col += 1
-            # sort the collected elements
-            diagonal.sort()
-            # sorted element back into same diagonal
-            row = start_row
-            col = start_col
-            index = 0
-            while row < rows and col < cols:
-                mat[row][col] = diagonal[index]
-                index += 1
-                row += 1
-                col += 1
-        # sort all diagonal that start from the first row
-        for col in range(cols):
-            sortdiagonal(0, col)
-        # sort all diagonal that start from the first column skip the top left cell because its diagonal is already processed
-        for row in range(1, rows):
-            sortdiagonal(row, 0)
-        # return the matrix with all diagonal sorted
-        return mat 
+        m = len(mat)
+        n = len(mat[0])
+        # dictionary to map: (row - col) -> elements of that diagonal
+        mp = {}
+        # collect all elements of each diagonal
+        for i in range(m):
+            for j in range(n):
+                # cells with the same value of (row - col) belong to the same diagonal
+                key = i - j
+                # create a new list for this diagonal if it does not exist
+                if key not in mp:
+                    mp[key] = []
+                # store the current element
+                mp[key].append(mat[i][j])
+        # sort the elements of every diagonal
+        for key in mp:
+            mp[key].sort()
+        # sorted values back into the matrix traverse from bottom-right so that pop() removes the smallest remaining element from each sorted diagonal
+        for i in range(m - 1, -1, -1):
+            for j in range(n - 1, -1, -1):
+                key = i - j
+                mat[i][j] = mp[key].pop()
+        # return the matrix with sorted diagonals
+        return mat
 
-# Time Complexity : O(N)
+# Time Complexity : O(Nlog)
 # Space Complexity : O(N)
