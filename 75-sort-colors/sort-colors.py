@@ -1,18 +1,35 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    # sort an array containing only 0, 1, 2 using bubble sort
+    # sort an array contianing only 0, 1, 2, using counting
     def sortColors(self, nums: List[int]) -> None:
-        # total nunber of element
+        # total number of elements
         n = len(nums)
-        # perform bubble sort
+        # count occurences of 0, 1, 2
+        count_0 = 0
+        count_1 = 0
+        count_2 = 0
+        # traverse the array and update the count
+        for num in nums:
+            if num == 0:
+                count_0 += 1
+            elif num == 1:
+                count_1 += 1
+            else:
+                count_2 += 1
+        # overwrite the array in sorted array
         for i in range(n):
-            # compare adjacent elements in each pass
-            for j in range(n - 1):
-                # swap the element if they are in wrong order
-                if nums[j] > nums[j + 1]:
-                    nums[j], nums[j + 1] = nums[j + 1], nums[j]
-        # return the sorted array
-        return nums 
+            # fill all 0 
+            if count_0 > 0:
+                nums[i] = 0
+                count_0 -= 1
+            # then fill all 1
+            elif count_1 > 0:
+                nums[i] = 1
+                count_1 -= 1
+            # finally fill all 2
+            elif count_2 > 0:
+                nums[i] = 2
+                count_2 -= 1
 
-# Time Complexity : O(N^2)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
