@@ -1,69 +1,31 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    # check whether the given Sudoku board is valid
-    def isValidSudoku(self, board):
-        # check every row
-        for row in range(9):
-            # store the digits already seen in this row
-            seen = []
-            for col in range(9):
+    # check whether the given sudoku board is valid
+    def isValidSudoku(self, board: list[list[str]]) -> bool:
+        # set to store unique identifiers for digits appearing in rows, columns, and 3 × 3 sub-boxes
+        seen = set()
+        # traverse every cell in the sudoku board
+        for i in range(9):
+            for j in range(9):
                 # ignore empty cells
-                if board[row][col] == ".":
+                if board[i][j] == ".":
                     continue
-                # check whether the current digit already exists
-                duplicate = False
-                for value in seen:
-                    if value == board[row][col]:
-                        duplicate = True
-                        break
-                # duplicate digit found
-                if duplicate:
+                # create unique identifiers for:
+                # - current digit in the row
+                row = f"{board[i][j]}_row_{i}"
+                # - current digit in the column
+                col = f"{board[i][j]}_col_{j}"
+                # - current digit in the 3 * 3 box 
+                box = f"{board[i][j]}_box_{i // 3}_{j // 3}"
+                # if any identifier already exists the sudoku board violates the sudoku rules
+                if row in seen or col in seen or box in seen:
                     return False
-                # store the current digit
-                seen.append(board[row][col])
-        # check every column
-        for col in range(9):
-            # store the digits already seen in this column
-            seen = []
-            for row in range(9):
-                # ignore empty cells
-                if board[row][col] == ".":
-                    continue
-                # check whether the current digit already exists
-                duplicate = False
-                for value in seen:
-                    if value == board[row][col]:
-                        duplicate = True
-                        break
-                # duplicate digit found
-                if duplicate:
-                    return False
-                # store the current digit
-                seen.append(board[row][col])
-        # check every 3 × 3 sub-box
-        for start_row in range(0, 9, 3):
-            for start_col in range(0, 9, 3):
-                # store the digits already seen in this box
-                seen = []
-                # traverse the current 3 × 3 sub-box
-                for row in range(start_row, start_row + 3):
-                    for col in range(start_col, start_col + 3):
-                        # ignore empty cells
-                        if board[row][col] == ".":
-                            continue
-                        # check whether the current digit already exists
-                        duplicate = False
-                        for value in seen:
-                            if value == board[row][col]:
-                                duplicate = True
-                                break
-                        # duplicate digit found
-                        if duplicate:
-                            return False
-                        # store the current digit
-                        seen.append(board[row][col])
-        # no duplicates found in any row column, or 3 × 3 sub-box
+                # record that the current digit has appeared in its row, column, and 3 × 3 box
+                seen.add(row)
+                seen.add(col)
+                seen.add(box)
+        # no Sudoku rule is violated
         return True
 
-# Time Complexity : O(N^6)
+# Time Complexity : O(N^2)
 # Space Complexity : O(N)
