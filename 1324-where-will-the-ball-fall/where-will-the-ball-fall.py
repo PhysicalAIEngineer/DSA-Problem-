@@ -1,54 +1,46 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    # simulate the movement of each ball through the grid and return the column where each ball exits
-    def findBall(self, grid):
+    # simulate the path of every ball through the grid and return the column where each ball exists
+    def findBall(self, grid: List[List[int]]) -> List[int]:
         # number of rows and columns
-        rows = len(grid)
-        cols = len(grid[0])
+        m = len(grid)
+        n = len(grid[0])
         # store the final position of every ball
-        answer = []
-        # drop one ball from every column
-        for start_col in range(cols):
-            # current position of the ball
+        result = []
+        # drop one ball from each column
+        for ball in range(n):
+            # current position of the ball 
             row = 0
-            col = start_col
-            # track whether the ball gets stuck
-            stuck = False
-            # move the ball through each row
-            while row < rows:
-                # board redirects the ball to the right
+            col = ball
+            # track whether the ball successfully exists
+            reached = True
+            # move the ball until it reaches the bottom or gets stuck
+            while row < m and col < n:
+                # current board slopes to the right
                 if grid[row][col] == 1:
-                    # ball hits the right boundary
-                    if col == cols - 1:
-                        stuck = True
+                    # ball gets stuck if it hits the right wall or it form v shape with the next board
+                    if col == n - 1 or grid[row][col + 1] == -1:
+                        reached = False
                         break
-                    # ball gets trapped in a V-shaped pattern: 1, -1
-                    if grid[row][col + 1] == -1:
-                        stuck = True
-                        break
-                    # move the ball one column right
+                    # move one column right
                     col += 1
-                # board redirects the ball to the left
-                else:
-                    # ball hits the left boundary
-                    if col == 0:
-                        stuck = True
+                # current board slopes to the left
+                elif grid[row][col] == -1:
+                    # ball gets stuck if it hits the left wall or it forms v shape with  the previous board
+                    if col == 0 or grid[row][col - 1] == 1:
+                        reached = False
                         break
-                    # ball gets trapped in a V-shaped pattern: 1, -1
-                    if grid[row][col - 1] == 1:
-                        stuck = True
-                        break
-                    # move the ball one column left
+                    # move one column left
                     col -= 1
-                # move the ball to the next row
+                # move down to the next row
                 row += 1
-            # store the result for the current ball
-            if stuck:
-                answer.append(-1)
+            # if the ball reaches the bottom store its exits column otherwise store -1
+            if reached:
+                result.append(col)
             else:
-                answer.append(col)
-        # return the exit column for every ball
-        return answer
+                result.append(-1)
+        # return the result for every starting column
+        return result 
 
-# Time Complexity : O(N^2)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
