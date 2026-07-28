@@ -1,4 +1,4 @@
-# Brute Force Code
+# Brute Force Code & Optimal Code
 class Solution:
     def insert(self, intervals: List[List[int]], newInterval: List[int]) -> List[List[int]]:
         # add the new interval to the existing list
