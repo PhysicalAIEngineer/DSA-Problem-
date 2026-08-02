@@ -1,42 +1,52 @@
-# Optimal Code (Prefix Sum)
+# Optimal Code [Sliding Window]
 class Solution:
-    def getAverages(self, nums: list[int], k: int) -> list[int]:
-        # number of elements in the array
+    def getAverages(self, nums: List[int], k: int) -> List[int]:
+        # number of element in the array
         n = len(nums)
-        # if k is zero the window contains only the current element itself
-        if k  == 0:
+        # if k = 0 the window contains only the current elements
+        if k == 0:
             return nums
-        # initally every possible is -1 because valid window may not exits
+        # intially every position is -1 because complete window may not exits
         result = [-1] * n
-        # size of the window centeted at index i window contains k elements on both sides plus the centre elements
+        # size of the window k element on the left = centre element + k element on the right
         window_size = 2 * k + 1
         # if the array is smaller than the required window no valid average can be calculated
         if n < window_size:
             return result
-        # create the prefix sum array prefix_sum[i] stores the sum of nums[0...i]
-        prefix_sum = [0] * n
-        # prefix sum for the first element
-        prefix_sum[0] = nums[0]
-        # bulid the prefix sum array
-        for i in range(1, n):
-            prefix_sum[i] = (prefix_sum[i - 1] + nums[i])
-        # only indices from k to n - k - 1 can have a complete window
-        for i in range(k, n - k):
-            # left bounday of the window
-            left_idx = i - k
-            # right boundary of the window
-            right_idx = i + k
-            # get the sum from index 0 though right index
-            total = prefix_sum[right_idx]
-            # remove the elements before left_idx to get only the current window sum
-            if left_idx > 0:
-                total -= prefix_sum[left_idx - 1]
-            # calculate the interger averages
-            avg = int(total / window_size)
-            # store the average at the centre index
-            result[i] = avg
-        # return all k radius averages
-        return result
+        # left boundary of the first window
+        left = 0
+        # right boundary of the second widnow
+        right = 2 * k
+        # centre of first window
+        centre = k
+        # calculate the sum of the first windows
+        window_sum = 0
+        for i in range(left, right + 1):
+            window_sum += nums[i]
+        # calculate and store the average for the first valid centre
+        result[centre] = window_sum // window_size
+        # move the centre one position forwards
+        centre += 1
+        # move the right bounary one position forward
+        right += 1
+        # continue sliding window until the right bounary reaches the end
+        while right < n:
+            # element that is leaving the current window
+            out_of_window = nums[left]
+            # element that is entering the current window
+            came_to_window = nums[right]
+            # remove the element leaving the window and add the new element entering the window
+            window_sum = (window_sum - out_of_window + came_to_window)
+            # calculate the average for the new centre of the window
+            result[centre] = window_sum // window_size
+            # move the center forward
+            centre += 1
+            # move the left bounary forward
+            left += 1
+            # move the right bounary forwar
+            right += 1
+        # return all calculated averages
+        return result 
 
 # Time Complexity : O(N)
-# Space Complexity : O(N) 
+# Space Complexity : O(N)
