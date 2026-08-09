@@ -1,21 +1,23 @@
+from bisect import bisect_left
 class MyCalendar:
     def __init__(self):
-        # create an empty list to store all booked events.
-        self.events = []
-    def book(self, startTime: int, endTime: int) -> bool:
-        # go through every event that is already booked need to check whether the new event overlaps with any existing event.
-        for start, end in self.events:
-            # check whether the new event and the existing event have a non-empty intersection.
-            # two intervals overlap when:
-            # 1. new event starts before existing event ends startTime < end
-            # 2. existing event starts before new event ends start < endTime
-            # both conditions must be true for an overlap.
-            if startTime < end and start < endTime:
-                # an overlap was found therefore, adding this event would create a double booking.
+        # create a list to store all booked events each event is stored as: (start, end)
+        self.st = []
+    def book(self, start: int, end: int) -> bool:
+        # find the first event whose start time is greater than or equal to the new event's start time.
+        index = bisect_left(self.st, (start, end))
+        # check if the current event overlaps with the next event if the next event starts before the new event ends then the two events overlap.
+        if index < len(self.st) and self.st[index][0] < end:
+            return False
+        # check if the current event overlaps with the previous event.
+        if index > 0:
+            # get the previous event.
+            previous_event = self.st[index - 1]
+            # if the new event starts before the previous event ends, then the two events overlap.
+            if start < previous_event[1]:
                 return False
-        # if reach here, the new event did not overlap with any existing event so, add the new event to the calendar.
-        self.events.append((startTime, endTime))
-        # event was successfully booked.
+        # no overlap was found insert the new event at the correct sorted position.
+        self.st.insert(index, (start, end))
         return True
 
 # Time Complexity : O(N)
