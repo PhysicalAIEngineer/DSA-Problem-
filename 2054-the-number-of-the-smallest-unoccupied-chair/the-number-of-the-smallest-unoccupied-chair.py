@@ -1,34 +1,57 @@
-# Brute Force Code 
+# Optimal Code
 class Solution:
     def smallestChair(self, times: list[list[int]], targetfriend: int) -> int:
         # number of friends
         n = len(times)
-        # stroe the departure time of the friend currently sitting on each chair so, index of the list = chair number
-        endtimes = [-1] * n
-        # store the arrival times of the target friends before sorting the friends because after sorting the original targetfriend index may no longer refer to the same friends
-        targetarrivaltime = times[targetfriend][0]
-        # sort the all friends by their arrival time so each element is : [arrival_time, departure_time] after sorting friends will be processed in the order they arrive
+        # min heap storing occupied chairs so each element is : (depature_time, chair_number)
+        occupied = []
+        # min heap storing chair numbers that are currently available smllest chair number will always be at the top
+        free = []
+        # store the arrival time of the target friends before sorting the input 
+        targetfriendarrial = times[targetfriend][0]
+        # sort al friends by their arrival time so, each friend is represented as : [arrival_time, depature_time]
         times.sort()
-        # process every friends in increasing order of arrival times
-        for time in times:
-            # extract the arrival time of the current friends
-            arrival = time[0]
-            # extract the depture time sof the current friends
-            depature = time[1]
-            # try every chair starting from chair 0 
-            for i in range(n):
-                # check whether chair i is avaliable if endtimes[i] <= arrival then the previous friend has already left when the current friend arrives therefore the chair can be reused
-                if endtimes[i] <= arrival:
-                    # assign the current friends to this available chair so update the chair depature times to the current friends departure times
-                    endtimes[i] = depature
-                    # check whehter the current friends is the target friends compare arrival times because all arrival times are distinct
-                    if arrival == targetarrivaltime:
-                        # return the chair number of immediately
-                        return i
-                    # current friends has been assigned chair so stop searching for chair and move to the next friends
-                    break
-        # target friend must always get chair so this line should never be reached
-        return - 1
+        # new chair that has never been assigned before 
+        chairno = 0
+        # process every friend in incresing order of arrival time
+        for i in range(n):
+            # arrival time of the current friends
+            arrival = times[i][0]
+            # depature time of the current friends
+            depat = times[i][1]
+            # free all chair whose occupants have left top of the occupied heap contain the friends whose leaves earliest if their depature time <= arrival their chair is avalible for the current friends continue until every chair whose occupant has already left is moved into the free heap
+            while occupied and occupied[0][0] <= arrival:
+                # get the chair number of the friends whose leaves earliest
+                chair = occupied[0][1]
+                # add this chair to the free chair heap because free is min heap the smallest available chair will be selected later
+                heapq.heappush(free, chair)
+                # remove this departed friends from the occupied heap
+                heapq.heappop(occupied)
+            # case 1: no previously used chair is free 
+            if not free:
+                # assign the next completely new chair to the current friends
+                heapq.heappush(occupied, (depat, chairno))
+                # check whether the current friends is the target friends
+                if arrival == targetfriendarrial:
+                    # return the chair assinged to the target friends
+                    return chairno
+                # current new chair number has now beeen used so the next new chair will have the next number
+                chairno += 1
+            # case 2: at least one chair is avalilables
+            else:
+                # smallest available chair is the top of the free min heap
+                leastchairavaliable = free[0]
+                # remove the smallest chair from the free heap because are going tot assign the current friends
+                heapq.heappop(free)
+                # check whether the current friends is the target friends
+                if arrival == targetfriendarrial:
+                    # return the smallest available chair numbers
+                    return leastchairavaliable
+                # chiar is occupied again by the current friends
+                heapq.heappush(occupied, (depat, leastchairavaliable))
+        # target friends must always receive chair 
+        return -1 
 
-# Time Complexity : O(N^2)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
+        
