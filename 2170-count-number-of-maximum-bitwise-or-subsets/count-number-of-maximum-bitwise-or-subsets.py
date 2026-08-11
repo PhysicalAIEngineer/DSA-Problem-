@@ -1,48 +1,48 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    def countMaxOrSubsets(self, nums: list[int]) -> int:
-        # store the maximum bitwise or found so far. initially, no elements have been selected so the or value starts at 0.
-        maximum_or = 0
-        # store the number of subsets that have the maximum OR value found so far
-        count = 0
-        # generate all possible subsets using backtracking at every element, we have two choices: 1. include the current element and 2. do not include the current element this generates every possible subset.
-        def backtrack(index, current_or, chosen):
-            # need nonlocal because we want to update maximum_or and count inside this nested function.
-            nonlocal maximum_or
-            nonlocal count
-            # Base case : if index reaches the length of nums have processed every element therefore, the current subset is complete.
-            if index == len(nums):
-                # ignore the empty subset chosen represents how many elements were included in the current subset.
-                if chosen == 0:
-                    return
-                # found a new maximum OR if the OR of the current subset is greater than the maximum OR seen so far
-                if current_or > maximum_or:
-                    # update the maximum OR.
-                    maximum_or = current_or
-                    # since this is the new maximum all previous subsets are no longer considered maximum current subset is the first subset having this new maximum OR.
-                    count = 1
-                # found another subset with same maximum if the current subset has exactly the same OR as the maximum OR
-                elif current_or == maximum_or:
-                    # increase the number of subsets having the maximum OR.
-                    count += 1
-                # current subset has been processed.
-                return
-            # Choice 1: include nums[index]
-            # add nums[index] to the current subset.
-            # update the OR: current_or | nums[index]
-            # also increase chosen because selected one more element.
-            backtrack(index + 1, current_or | nums[index],chosen + 1)
-            # Choice 2: Do not include nums[index]
-            # leave current_or unchanged because nums[index] is not selected chosen also remains unchanged.
-            backtrack(index + 1, current_or, chosen)
-        # start generating subsets.
-        # 1. index = 0  → start from the first element.
-        # 2. current_or = 0 → no elements have been selected yet.
-        # 3. chosen = 0 → The current subset is empty.
-        backtrack(0, 0, 0)
-        # return the number of non-empty subsets whose bitwise OR is equal to the maximum OR.
-        return count
+    # recursive function with memoization
+    # 1. idx     : current index in nums
+    # 2. curror  : bitwise OR of elements selected so far
+    # 3. nums    : input array
+    # 4. maxor   : maximum possible OR
+    # 5. t       : DP/memoization table
+    def countSubsets(self, idx, curror, nums, maxor, t):
+        # base case: all elements have been processed.
+        if idx == len(nums):
+            # if current OR equals maximum OR this is one valid subset.
+            if curror == maxor:
+                return 1
+            # otherwise, this subset is invalid.
+            return 0
+        # check whether this state has already been calculated.
+        if t[idx][curror] != -1:
+            return t[idx][curror]
+        # choice 1: include nums[idx] in the subset.
+        takeCount = self.countSubsets(idx + 1, curror | nums[idx], nums, maxor, t)
+        # choice 2: do not include nums[idx].
+        notTakeCount = self.countSubsets(idx + 1, curror, nums, maxor, t)
+        # combine both choice total number of valid subset is : subset that take nums[idx] + subset that do not take nums[idx]
+        t[idx][curror] = takeCount + notTakeCount
+        # return the calcualted answer for this (idx, curror) state
+        return t[idx][curror]
+    def countMaxOrSubsets(self, nums: List[int]) -> int:
+        # find the maximum possible OR the maximum OR is the OR of all elements.
+        maxor = 0
+        # calculate or all element
+        for num in nums:
+            maxor |= num
+        # number of elements.
+        n = len(nums)
+        # DP table:
+        # t[idx][curror]
+        # idx     -> current position
+        # curror  -> OR obtained so far
+        # -1 means the state has not been calculated yet.
+        t = [[-1] * (maxor + 1) for _ in range(n + 1)]
+        # initially no elements have been selected so current OR is 0.
+        curror = 0
+        # start recursion from index 0.
+        return self.countSubsets(0, curror, nums, maxor, t)
 
-# Time Complexity : O(N!)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
-        
