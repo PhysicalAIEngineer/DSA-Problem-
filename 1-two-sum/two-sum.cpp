@@ -1,24 +1,24 @@
-// Brute Force Code
+// Optimal Code
 class Solution {
 public:
     vector<int> twoSum(vector<int>& nums, int target) {
-        // store the total number of elements
-        int n = nums.size();
-        // try every possible first element
-        for (int i = 0; i < n; i++) {
-            // pair it with every element that comes after it
-            for (int j = i + 1; j < n; j++) {
-                // check whether the current pair adds up to the target
-                if (nums[i] + nums[j] == target) {
-                    // return the indices of the matching pair
-                    return {i, j};
-                }
+        // dictionary to store: number -> index
+        unordered_map<int, int> mp;
+        // Traverse the array
+        for (int i = 0; i < nums.size(); i++) {
+            // calculate the number needed to reach the target
+            int complement = target - nums[i];
+            // if the complement has already been seen return its index and the current index
+            if (mp.find(complement) != mp.end()) {
+                return {mp[complement], i};
             }
+            // store the current number along with its index
+            mp[nums[i]] = i;
         }
-        // return an empty vector if no pair is found
+        // no valid pair found
         return {};
     }
 };
 
-// Time Complexity : O(N^2)
-// Space Complexity : O(N)
+// Time Complexity : O(N)
+// Space Complexity : O(1)
