@@ -1,6 +1,6 @@
 # Optimal Code
 class Solution:
-    def findDiagonalOrder(self, mat: List[List[int]]) -> List[int]:
+    def findDiagonalOrder(self, mat: list[list[int]]) -> list[int]:
         # number of rows and column
         m = len(mat)
         n = len(mat[0])
@@ -30,7 +30,7 @@ class Solution:
             # toggle the traversal direaction for the next diagonal
             flip = not flip
         # return the diagonal traversal
-        return result 
+        return result
 
 # Time Complexity : O(N)
 # Space Complexity : O(N)
