@@ -1,34 +1,41 @@
-// Brute Force Code
+// Optimal Code
 class Solution {
 public:
     vector<int> sumEvenAfterQueries(
         vector<int>& nums,
         vector<vector<int>>& queries
     ) {
-        // store the answer after processing each query
-        vector<int> answer;
+        // calculate the initial sum of all even numbers
+        int sum_even = 0;
+        for (int num : nums) {
+            if (num % 2 == 0) {
+                sum_even += num;
+            }
+        }
+        // store the answer after each query
+        vector<int> result;
         // process every query
         for (auto& query : queries) {
             // extract value and index
-            int value = query[0];
-            int index = query[1];
-            // update the value at the given index
-            nums[index] = nums[index] + value;
-            // calculate the sum of all even numbers
-            int even_sum = 0;
-            for (int num : nums) {
-                // add only even numbers
-                if (num % 2 == 0) {
-                    even_sum += num;
-                }
+            int val = query[0];
+            int idx = query[1];
+            // if the current element is even remove its contribution from the current even sum
+            if (nums[idx] % 2 == 0) {
+                sum_even -= nums[idx];
             }
-            // store the even sum after this query
-            answer.push_back(even_sum);
+            // apply the update
+            nums[idx] += val;
+            // if the updated element is even add its contribution back
+            if (nums[idx] % 2 == 0) {
+                sum_even += nums[idx];
+            }
+            // store the current even sum
+            result.push_back(sum_even);
         }
-        // return the answer for all queries
-        return answer;
+        // return the even sums after all queries
+        return result;
     }
 };
 
-// Time Complexity : O(N^2)
+// Time Complexity : O(N)
 // Space Complexity : O(N)
