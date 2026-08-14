@@ -1,39 +1,44 @@
-// Brute Force Code
+// Optimal Code
 class Solution {
 public:
-    // return the diagonal traversal of the matrix
     vector<int> findDiagonalOrder(vector<vector<int>>& mat) {
         // number of rows and columns
-        int rows = mat.size();
-        int cols = mat[0].size();
+        int m = mat.size();
+        int n = mat[0].size();
+        // dictionary to map: (row + col) -> elements on the diagonal
+        unordered_map<int, vector<int>> mp;
         // store the final diagonal traversal
         vector<int> result;
-        // total number of diagonals in the matrix
-        int total_diagonals = rows + cols - 1;
-        // process each diagonal
-        for (int diagonal = 0; diagonal < total_diagonals; diagonal++) {
-            // store current diagonal elements
-            vector<int> current_diagonal;
-            // collect all elements belonging to this diagonal
-            for (int row = 0; row < rows; row++) {
-                for (int col = 0; col < cols; col++) {
-                    // cells with the same value of (row + col) belong to the same diagonal
-                    if (row + col == diagonal) {
-                        current_diagonal.push_back(mat[row][col]);
-                    }
+        // group all matrix elements by their diagonal index (row + col)
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                // cells having the same value of (row + col) belong to the same diagonal
+                int key = i + j;
+                // create a new list for the diagonal if it does not exist
+                if (mp.find(key) == mp.end()) {
+                    mp[key] = {};
                 }
+                // store the current element
+                mp[key].push_back(mat[i][j]);
             }
-            // even-numbered diagonals are traversed from bottom to top, so reverse their order
-            if (diagonal % 2 == 0) {
-                reverse(current_diagonal.begin(),current_diagonal.end());
+        }
+        // even diagonals are traversed upward & odd diagonals are traversed downward
+        bool flip = true;
+        // process diagonals in increasing order
+        for (int key = 0; key < m + n - 1; key++) {
+            // reverse every alternate diagonal to obtain the required zigzag order
+            if (flip) {
+                reverse(mp[key].begin(), mp[key].end());
             }
-            // append the current diagonal to the result
-            result.insert(result.end(), current_diagonal.begin(),current_diagonal.end());
+            // add the current diagonal to the final answer
+            result.insert(result.end(), mp[key].begin(), mp[key].end());
+            // toggle the traversal direction for the next diagonal
+            flip = !flip;
         }
         // return the diagonal traversal
         return result;
     }
 };
 
-// Time Complexity : O(N^3)
+// Time Complexity : O(N)
 // Space Complexity : O(N)
