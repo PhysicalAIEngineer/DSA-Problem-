@@ -1,7 +1,7 @@
 # Optimal Code
 class Solution:
-    def sumEvenAfterQueries(self, nums: List[int], queries: List[List[int]]) -> List[int]:
-        # calculate the initial sum of all even number 
+    def sumEvenAfterQueries(self, nums: list[int], queries: list[list[int]]) -> list[int]:
+        # calculate the initial sum of all even number
         sum_even = 0
         for num in nums:
             if num % 2 == 0:
@@ -21,7 +21,7 @@ class Solution:
             # store the current even sum
             result.append(sum_even)
         # return the even sums after all queires
-        return result 
+        return result
 
 # Time Complexity : O(N)
 # Space Complexity : O(N)
