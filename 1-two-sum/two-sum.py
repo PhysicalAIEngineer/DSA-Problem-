@@ -1,6 +1,6 @@
 # Brute Force Code
 class Solution:
-    def twoSum(self, nums: List[int], target: int) -> List[int]:
+    def twoSum(self, nums: list[int], target: int) -> list[int]:
         # store the total number of elements
         n = len(nums)
         # try every possible first element
