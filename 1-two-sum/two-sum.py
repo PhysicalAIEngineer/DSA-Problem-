@@ -1,16 +1,19 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
     def twoSum(self, nums: list[int], target: int) -> list[int]:
-        # store the total number of elements
-        n = len(nums)
-        # try every possible first element
-        for i in range(n):
-            # pair it with every element that comes after it
-            for j in range(i + 1, n):
-                # check whether the current pair adds up to the target
-                if nums[i] + nums[j] == target:
-                    # return the indices of the matching pairs
-                    return [i, j]
+        # dictionary to store : number --> index
+        mp = {}
+        # traverse the array
+        for i in range(len(nums)):
+            # calculate the number needed to reach the target
+            complement = target - nums[i]
+            # if the complement has alredy been seen return its index and the current index
+            if complement in mp:
+                return [mp[complement], i]
+            # store the current number along with its index
+            mp[nums[i]] = i
+        # no valid pair found
+        return []
 
-# Time Complexity : O(N^2)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
