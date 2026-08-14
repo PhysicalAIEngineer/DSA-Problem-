@@ -1,4 +1,4 @@
-// Optimal Code
+// Brute Force Code
 class Solution {
 public:
     vector<int> sumEvenAfterQueries(
