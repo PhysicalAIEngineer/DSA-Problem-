@@ -1,6 +1,6 @@
 # Optimal Code
 class Solution:
-    def findOriginalArray(self, changed: List[int]) -> List[int]:
+    def findOriginalArray(self, changed: list[int]) -> list[int]:
         # total number of elements
         n = len(changed)
         # valid doubled array must have an even number of elements
@@ -31,8 +31,7 @@ class Solution:
             mp[num] -= 1
             mp[twice] -= 1
         # return the recoverd original array
-        return result 
+        return result
 
 # Time Complexity : O(Nlog)
 # Space Complexity : O(N)
-        
