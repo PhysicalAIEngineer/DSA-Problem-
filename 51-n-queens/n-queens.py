@@ -1,52 +1,52 @@
-# Optimal Code
+# Brute Force Code & Optimal Code
 class Solution:
-    def __init__(self):
-        # list to store all valid board configurations
+    def __init__ (self):
+        # list to store the all valid board configuration
         self.result = []
-    # backtracking function to place queens row by row
-    def solve(self, board: list[list[str]], row: int, columns: set[int], diagonals: set[int], anti_diagonals: set[int]) -> None:
-        # if queens have been placed in all rows, store the current board configuration
+    # backtracking function to place queens row by rows
+    def solve(self, board: list[list[str]], row: int, columns: set[int], diagonals: set[int], anti_diagonals: set[int]):
+        # if queens have been placed in all rows store the current board configurations
         if row == len(board):
             self.result.append(["".join(r) for r in board])
-            return
-        # try placing a queen in every column of the current row
+            return 
+        # try placing a queen in every column of the current rows
         for col in range(len(board)):
             # compute the current diagonal identifiers
             diagonal_id = row - col
-            anti_diagonal_id = row + col
+            antidiagonal_id = row + col
             # skip this position if it is already under attack
-            if (col in columns or diagonal_id in diagonals or anti_diagonal_id in anti_diagonals):
+            if (col in columns or diagonal_id in diagonals or antidiagonal_id in anti_diagonals):
                 continue
-            # mark the current column and diagonals as occupied
+            # mark the current column and diagonal as occupieds
             columns.add(col)
             diagonals.add(diagonal_id)
-            anti_diagonals.add(anti_diagonal_id)
-            # place the queen
-            board[row][col] = 'Q'
-            # recur for the next row
-            self.solve(board, row + 1, columns, diagonals,anti_diagonals)
-            # remove the queen and free the column and diagonals
+            anti_diagonals.add(antidiagonal_id)
+            # place the queens
+            board[row][col] = "Q"
+            # recursively for the next rows
+            self.solve(board, row + 1, columns, diagonals, anti_diagonals)
+            # remove the queens and free the columns and diagonals
             columns.remove(col)
             diagonals.remove(diagonal_id)
-            anti_diagonals.remove(anti_diagonal_id)
-            board[row][col] = '.'
-    # return all valid N-Queens configurations
-    def solveNQueens(self,n: int) -> list[list[str]]:
-        # if the board size is zero, return an empty list
+            anti_diagonals.remove(antidiagonal_id)
+            board[row][col] = "."
+    # return all valid N-Queens configurations 
+    def solveNQueens(self, n: int) -> List[List[str]]:
+        # if the boards size is zeros, return any empty list
         if n == 0:
             return []
         # clear any previous stored solutions
         self.result = []
-        # create an empty n x n chessboard
-        board = [['.' for _ in range(n)] for _ in range(n)]
+        # create an empty n * n solutions
+        board = [["." for _ in range(n)] for _ in range(n)]
         # sets to keep track of occupied columns main diagonals and anti-diagonals
         columns = set()
         diagonals = set()
         anti_diagonals = set()
-        # start placing queens from the first row
-        self.solve(board,0,columns,diagonals,anti_diagonals)
+        # start placing queens from first rows
+        self.solve(board, 0, columns, diagonals, anti_diagonals)
         # return all valid board configurations
         return self.result
 
 # Time Complexity : O(N)
-# Space Complexity : O(N^2)
+# Space Complexity : O(N)
