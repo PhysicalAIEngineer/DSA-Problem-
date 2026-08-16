@@ -1,4 +1,4 @@
-# Optimal Code
+# Brute Force Code & Optimal Code
 class Solution:
     def __init__(self):
         # list to store all unique permutations
