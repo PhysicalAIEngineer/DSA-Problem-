@@ -1,7 +1,7 @@
-# Optimal Code
+# Brute Force Code & Optimal Code 
 class Solution:
     # check if there exists continues subarray of length at least 2 whose sum is multiple of k
-    def checkSubarraySum(self, nums: List[int], k: int) -> bool:
+    def checkSubarraySum(self, nums: list[int], k: int) -> bool:
         # total number of elements
         n = len(nums)
         # dictionary to map : remainder -> first index where it appeared
