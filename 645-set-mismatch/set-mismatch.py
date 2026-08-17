@@ -1,7 +1,7 @@
 # Optimal Code
 class Solution:
     # return the duplicated numbers and the missing number
-    def findErrorNums(self, nums: List[int]) -> List[int]:
+    def findErrorNums(self, nums: list[int]) -> list[int]:
         # total number of elements
         n = len(nums)
         # variable to store the missing and duplicates number
@@ -12,7 +12,7 @@ class Solution:
         # count the frequency of every number in the array
         for x in nums:
             mp[x] = mp.get(x, 0) + 1
-        # check every number from 1 to n 
+        # check every number from 1 to n
         for i in range(1, n + 1):
             # if the number exists in the dictionary
             if i in mp:
