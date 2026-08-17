@@ -1,47 +1,37 @@
-// Brute Force Code
+// Optimal Code
 class Solution {
 public:
-    // find the duplicated and missing numbers in the given array
+    // return the duplicated number and the missing number
     vector<int> findErrorNums(vector<int>& nums) {
         // total number of elements
         int n = nums.size();
-        // store the duplicate and missing numbers
-        int duplicate = -1;
-        int missing = -1;
-        // find the duplicated number
-        for (int i = 1; i <= n; i++) {
-            // count how many times the current number appears
-            int count = 0;
-            for (int num : nums) {
-                if (num == i) {
-                    count++;
-                }
-            }
-            // if the number appears twice it is the duplicate
-            if (count == 2) {
-                duplicate = i;
-            }
+        // variables to store the missing and duplicate numbers
+        int missing = 0;
+        int duplicates = 0;
+        // dictionary to map: number -> frequency
+        unordered_map<int, int> mp;
+        // count the frequency of every number in the array
+        for (int x : nums) {
+            mp[x]++;
         }
-        // find the missing number
+        // check every number from 1 to n
         for (int i = 1; i <= n; i++) {
-            // assume the number is not present
-            bool found = false;
-            // search for the current number in the array
-            for (int num : nums) {
-                if (num == i) {
-                    found = true;
-                    break;
+            // if the number exists in the dictionary
+            if (mp.count(i)) {
+                // frequency of 2 means the number is duplicated
+                if (mp[i] == 2) {
+                    duplicates = i;
                 }
             }
-            // if the number is not found it is the missing number
-            if (!found) {
+            else {
+                // if the number is not present in the dictionary, it is missing
                 missing = i;
             }
         }
-        // return duplicate and missing numbers
-        return {duplicate, missing};
+        // return duplicate and missing number
+        return {duplicates, missing};
     }
 };
 
-// Time Complexity : O(N^2)
-// Space Complexity : O(N)
+// Time Complexity : O(N)
+// Space Complexity : O(1)
