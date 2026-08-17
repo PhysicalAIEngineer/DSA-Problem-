@@ -1,4 +1,4 @@
-# Optimal Code
+# Brute Force Code & Optimal Code
 class Solution:
     # simulate the path of every ball through the grid and return the column where each ball exists
     def findBall(self, grid: List[List[int]]) -> List[int]:
