@@ -1,23 +1,25 @@
-// Brute Force Code
+// Optimal Code
 class Solution {
 public:
+    // recursive function to find the winner's index (0-based)
+    int findWinnerIdx(int n, int k) {
+        // base case: if only one player is left its index is 0.
+        if (n == 1) {
+            return 0;
+        }
+        // recursively find the winner's index when there are n - 1 players.
+        int index = findWinnerIdx(n - 1, k);
+        // convert the winner's index from the smaller circle (n - 1 players) to the current circle of n players using the josephus formula.
+        index = (index + k) % n;
+        // return the winner's index for n players.
+        return index;
+    }
+    // return the winner's number (1-based)
     int findTheWinner(int n, int k) {
-        // create a vector containing all players numbered from 1 to n
-        vector<int> players;
-        for (int i = 1; i <= n; i++) {
-            players.push_back(i);
-        }
-        // start counting from the first player index 0
-        int index = 0;
-        // continue eliminating players until only one player remains
-        while (players.size() > 1) {
-            // move (k - 1) steps from the current position modulo is used to wrap around the circular list.
-            index = (index + k - 1) % players.size();
-            // remove the player at the calculated index next round automatically starts from the player immediately after the removed player.
-            players.erase(players.begin() + index);
-        }
-        // only remaining player is the winner
-        return players[0];
+        // find the winner's index (0-based)
+        int result_index = findWinnerIdx(n, k);
+        // convert the 0-based index into the required 1-based player number
+        return result_index + 1;
     }
 };
 
