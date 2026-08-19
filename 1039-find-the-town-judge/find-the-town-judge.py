@@ -1,4 +1,4 @@
-# Brute Force Code
+# Brute Force Code & Optimal Code
 class Solution:
     def findJudge(self, n: int, trust: List[List[int]]) -> int:
         # try every possible person as possible judge
