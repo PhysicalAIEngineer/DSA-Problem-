@@ -61,4 +61,4 @@ class Solution:
         return [min_round, max_round]
 
 # Time Complexity : O(N)
-# Space Complexity : O(Nlog)
+# Space Complexity : O(N)
