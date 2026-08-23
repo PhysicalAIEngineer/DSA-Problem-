@@ -1,42 +1,32 @@
-# Brute Force Code
+# Optimal Code
 class Solution:
-    # convert consecutive number into ranges and return them strings
-    def summaryRanges(self, nums: list[int]):
-        # stores the final list of ranges
+    def summaryRanges(self, nums: list[int]) -> list[str]:
+        # number of element in the array
+        n = len(nums)
+        # if the array is empty there are not ranges to return
+        if n == 0:
+            return []
+        # stroe the final list of ranges
         result = []
         # start processing from the first elements
         i = 0
-        # continue until every number has been processed
-        while i < len(nums):
+        # continue until every element is processed
+        while i < n:
             # store the first number of the current ranges
             start = nums[i]
-            # store the last number of the current ranges
-            last = nums[i]
-            # start checking from the next elements
-            j = i + 1
-            # store the last consecutive number of the current ranges
-            current = nums[i]
-            # continue while there are more element to check
-            while j < len(nums):
-                # check whether the next number is consecutive with the current numbers
-                if nums[j] == current + 1:
-                    # extend the current ranges
-                    current = nums[j]
-                    # move the next element
-                    j += 1
-                # gap means the current ranges ends
-                else:
-                    break
-            # if the range contains only one number store only that number
-            if start == current:
-                result.append(str(start))
-            # if the range contains multiple consecutive number store it as start -> end
+            # keep moving forward while the numbers are consecutive
+            while (i + 1 < n and nums[i] + 1 == nums[i + 1]):
+                i += 1
+            # if the starting and ending numbers are diffrent create range such 0 -> 2
+            if start != nums[i]:
+                result.append(f"{start}->{nums[i]}")
+            # otherwise the range contains only one numbers
             else:
-                result.append(str(start) + "->" + str(current))
-            # continue from the first element that was not part of the current range
-            i = j
+                result.append(str(start))
+            # move the next unprocessed numbers
+            i += 1
         # return all summarized ranges
         return result
 
-# Time Complexity : O(N^2)
+# Time Complexity : O(N)
 # Space Complexity : O(N)
