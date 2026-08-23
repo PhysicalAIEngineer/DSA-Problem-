@@ -1,4 +1,4 @@
-# Brute Force Code
+# Brute Force Code & Optimal Code
 class Solution:
     # count the total number of negative values present in the matrix
     def countNegatives(self, grid: list[list[int]]) -> int:
