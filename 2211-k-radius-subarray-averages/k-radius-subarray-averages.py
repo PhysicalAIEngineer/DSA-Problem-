@@ -1,4 +1,4 @@
-# Optimal Code [Sliding Window]
+# Brute Force Code & Optimal Code
 class Solution:
     def getAverages(self, nums: List[int], k: int) -> List[int]:
         # number of element in the array
