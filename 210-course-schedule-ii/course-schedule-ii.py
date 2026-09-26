@@ -1,60 +1,61 @@
 # Brute Force Code & Optimal Code [DFS Method]
-from collections import defaultdict  
+from collections import defaultdict, deque  
 class Solution: 
-    def __init__(self): 
-        # flag to indicate whether a cycle exists
-        self.hasCycle = False 
-    def DFS(self, adj, u, visited, st, inRecursion): 
-        # mark current node as visited
-        visited[u] = True 
-        # mark current node as part of current DFS path
-        inRecursion[u] = True 
-        # first process all neighbours of u then add u to stack
-        for v in adj[u]: 
-            # if v is already in the current DFS path then a cycle is present
-            if inRecursion[v]: 
-                self.hasCycle = True 
-                return 
-            # if v is not visited, perform DFS
-            if not visited[v]: 
-                self.DFS(adj, v, visited, st, inRecursion) 
-        # add current node after all its neighbours are processed
-        st.append(u) 
-        # DFS of u is completed so remove u from current recursion path
-        inRecursion[u] = False 
-    def findOrder(self, numCourses, prerequisites):
-        # create adjacency list
+    # using Kahn's Algorithm (BFS)
+    def topologicalSortCheck(self, adj, n, indegree): 
+        # queue stores nodes whose indegree becomes 0
+        que = deque() 
+        # count how many courses we can process
+        count = 0 
+        # store the valid course order
+        result = [] 
+        # add all courses having indegree = 0 these courses have no prerequisites
+        for i in range(n): 
+            if indegree[i] == 0: 
+                # add course to result
+                result.append(i) 
+                # one course is processed
+                count += 1 
+                # add course to queue
+                que.append(i) 
+        # BFS
+        while que: 
+            # take a course whose prerequisites are completed
+            u = que.popleft() 
+            # visit all courses dependent on u
+            for v in adj[u]: 
+                # one prerequisite of v is completed
+                indegree[v] -= 1 
+                # if all prerequisites of v are completed
+                if indegree[v] == 0: 
+                    # add v to the course order
+                    result.append(v) 
+                    # one more course is processed
+                    count += 1 
+                    # process v later
+                    que.append(v) 
+        # if all courses are not processed then a cycle is present
+        if count != n: 
+            return [] 
+        # return valid course order
+        return result 
+    def findOrder(self, numCourses, prerequisites): 
+        # adjacency list
         adj = defaultdict(list) 
-        # track whether each course has been visited
-        visited = [False] * numCourses 
-        # track nodes currently present in DFS recursion path
-        inRecursion = [False] * numCourses 
-        # reset cycle flag
-        self.hasCycle = False 
-        # stack to store DFS finishing order
-        st = [] 
+        # indegree[i] = number of prerequisites of course i
+        indegree = [0] * numCourses 
         # build the directed graph
-        for vec in prerequisites:
+        for vec in prerequisites: 
             # 'a' = course to be taken
             a = vec[0] 
             # 'b' = prerequisite course
             b = vec[1] 
             # create edge: b ---> a
             adj[b].append(a) 
-        # perform DFS for every courses because graph may have multiple components
-        for i in range(numCourses): 
-            if not visited[i]: 
-                self.DFS(adj, i, visited, st, inRecursion) 
-        # Final topological ordering
-        result = [] 
-        # If cycle is present valid course order is not possible
-        if self.hasCycle: 
-            return [] 
-        # Reverse DFS finishing order
-        while st: 
-            result.append(st.pop()) 
-        # Return valid course order
-        return result
+            # one prerequisite is going into course a
+            indegree[a] += 1 
+        # find the topological order if cycle is present, return []
+        return self.topologicalSortCheck(adj, numCourses, indegree)
 
 # Time Complexity : O(N)
 # Space Complexity : O(N)
