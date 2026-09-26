@@ -1,4 +1,4 @@
-# Brute Force Code & Optimal Code [DFS Method]
+# Brute Force Code & Optimal Code [BFS Method]
 from collections import defaultdict, deque  
 class Solution: 
     # using Kahn's Algorithm (BFS)
