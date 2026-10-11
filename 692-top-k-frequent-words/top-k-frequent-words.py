@@ -23,3 +23,6 @@ class Solution:
             i += 1
         # return the k most frequent words
         return  result 
+
+# Time Complexity : O(NlogN)
+# Space Complexity : O(1)
