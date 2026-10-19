@@ -1,3 +1,4 @@
+# Brute Force Code & Optimal Code 
 class Solution:
     def check(self, mp, node, destination, visited):
         # if the current node is the destination return True
