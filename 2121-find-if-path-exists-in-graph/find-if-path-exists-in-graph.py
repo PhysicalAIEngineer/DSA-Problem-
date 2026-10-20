@@ -1,39 +1,40 @@
-# Brute Force Code & Optimal Code 
+# Brute Force Code & Optimal Code [BFS Method]
+from collections import deque
 class Solution:
-    def check(self, mp, node, destination, visited):
-        # if the current node is the destination return True
-        if node == destination:
-            return True
-        # stop if the current node has already been visited
-        if visited[node]:
-            return False
-        # mark the current node as visited
-        visited[node] = True
-        # traverse all neighbouring nodes using DFS
-        for i in mp.get(node, []):
-            # recursively check whether the destination is reachables
-            if self.check(mp, i, destination, visited):
-                return True
-        # return False if no path to the destination is found
-        return False
-    def validPath(self, n: int, edges: list[list[int]], source: int, destination: int) -> bool:
-        # if source and destination are the same return True
-        if source == destination:
-            return True
-        # create adjacency list to represents the undirected graph
+    def validPath(self, n, edges, source, destination):
+        # create an adjacency list to represent the graph
         mp = {}
-        # add every edge in both directions
+        # build the undirected graph
         for vec in edges:
             u = vec[0]
             v = vec[1]
-            # connect u to v
+            # add an edge from u to v
             mp.setdefault(u, []).append(v)
-            # connect v to u
+            # add an edge from v to u
             mp.setdefault(v, []).append(u)
-        # intialize all nodes as unvisited
+        # track visited nodes to avoid revisiting them
         visited = [False] * n
-        # start DFS from the source and check if the destination is reachables
-        return self.check(mp, source, destination, visited)
+        # create a queue for BFS and add the source node
+        queue = deque()
+        queue.append(source)
+        # mark the source as visited
+        visited[source] = True
+        # perform BFS until the queue becomes empty
+        while queue:
+            # remove the front node from the queue
+            node = queue.popleft()
+            # if the destination is reached, a path exists
+            if node == destination:
+                return True
+            # visit all unvisited neighboring nodes
+            for it in mp.get(node, []):
+                if not visited[it]:
+                    # Mark the neighbor as visited
+                    visited[it] = True
+                    # add the neighbor to the queue
+                    queue.append(it)
+        # return False if the destination is unreachable
+        return False
 
 # Time Complexity : O(N)
 # Space Complexity : O(N)
