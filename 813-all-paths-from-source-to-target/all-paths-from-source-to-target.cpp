@@ -1,3 +1,4 @@
+// Brute Force Code & Optimal Code
 class Solution {public: vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& adj) {
         // stores all valid paths from source node (0) to target node (n - 1)
         vector<vector<int>> result;
