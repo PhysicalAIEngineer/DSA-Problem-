@@ -1,3 +1,4 @@
+# Brute Force Code & Optimal Code 
 class Solution:
     def rob(self, nums: list[int]) -> int:
         # store the total number of houses
