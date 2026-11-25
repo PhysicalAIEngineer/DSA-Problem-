@@ -1,27 +1,25 @@
-# Optimal Code
 class Solution:
-    # find the minimum element (pivot) in the rotated sorted array
     def findPivot(self, nums: list[int]):
-        # intialize the binary search boundaries
+        # intialize the left boundary of the binary search initially search starts from the first elements
         left = 0
+        # initalize the right boundary of the binary search len(nums) - 1 represents the index of the last elements
         right = len(nums) - 1
-        # perform binary search
+        # continue binary search while the search range contains more than one element onece left == right both pointer indicates the minimum elements
         while left < right:
-            # find the middle index
+            # calcualte the middle index of the current search range using the formula avoids directly adding left and right
             mid = left + (right - left) // 2
-            # if the middle element is greater than the  rightmost element the minimum must be in the right half
+            # compare the middle element with the rightmost element if nums[mid] > nums[right] the middle element belongs to the left larget position of the rotated array therefore the minimum element must be to the right of mid
             if nums[mid] > nums[right]:
-                # discard the left half including mid
+                # discard the left portions including nums[mid] cannot be the minimum because it is geater than nums[right] move the left boundary immediately after mid
                 left = mid + 1
-            # otherwise the minimum is at mid or somewhere in the left half
             else:
+                # if nums[mid] <= nums[right] the minimum element must be at mid or somewhere to its left keep mid in the search range because nums[mid] itself could be the minimum element move the right bounary to mid
                 right = mid
-        # left pointer now points to the minium element
+        # binary search ends when left == right both pointer now point to the index of the minimum element return the minimum values from the array
         return nums[left]
-    # return the minimum element in the rotated sorted array 
-    def findMin(self, nums: List[int]) -> int:
-        # find and return the pivot element
+    def findMin(self, nums: list[int]) -> int:
+        # findpivot perfrom binary search and return the minimum values not its index
         return self.findPivot(nums)
-        
-# Time Complexity : O(Nlog)
-# Space Complexity : O(1)
+
+# Time Complexity : O(NlogN)
+# Space Complexity : O(N)
